@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/tv_my_word_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="字"
+        android:textSize="24sp"/>
+    <TextView
+        android:id="@+id/tv_my_word_lang"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_toRightOf="@id/tv_my_word_name"
+        android:text="晋语"/>
+    <TextView
+        android:id="@+id/tv_my_word_like"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_toRightOf="@id/tv_my_word_name"
+        android:layout_below="@id/tv_my_word_lang"
+        android:text="共有18人赞过"/>
+    <ImageView
+        android:id="@+id/iv_my_word_delete"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/iconfont_delete"/>
+</RelativeLayout>

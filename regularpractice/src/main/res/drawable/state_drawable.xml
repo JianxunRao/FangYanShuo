@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--按下的状态-->
+    <item android:state_pressed="true"
+        android:drawable="@drawable/iconfont_add_new_word2"/>
+   <!--处于焦点的状态-->
+    <item android:state_focused="true"
+        android:drawable="@drawable/ic_thumb_up_black_48dp"/>
+    <!--正常状态-->
+    <item android:drawable="@drawable/iconfont_add_new_word"/>
+</selector>

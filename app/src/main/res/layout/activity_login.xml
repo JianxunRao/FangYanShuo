@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_login"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar_login"
+        android:background="#f2f2f2">
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/et_login_account"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="16dp"
+                    android:hint="账号"
+                    app:met_iconLeft="@drawable/ic_person_outline_black_48dp"
+                    app:met_floatingLabel="highlight"
+                    app:met_floatingLabelText="账号"
+                    app:met_primaryColor="@color/colorPrimary"
+                    app:met_textColor="@color/colorFallback"/>
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/et_login_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="16dp"
+                    android:layout_below="@id/et_login_account"
+                    android:hint="密码"
+                    android:inputType="textPassword"
+                    app:met_iconLeft="@drawable/ic_lock_outline_black_48dp"
+                    app:met_floatingLabel="highlight"
+                    app:met_floatingLabelText="密码"
+                    app:met_primaryColor="@color/colorPrimary"
+                    app:met_textColor="@color/colorFallback"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/et_login_password"
+                    android:orientation="horizontal">
+                    <com.gc.materialdesign.views.ButtonFlat
+                        android:id="@+id/bt_login2reg"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="注册"
+                        />
+                    <com.gc.materialdesign.views.ButtonRectangle
+                        android:id="@+id/bt_login"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorPrimary"
+                        android:text="登录"/>
+                </LinearLayout>
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+    </RelativeLayout>
+
+
+
+
+</RelativeLayout>

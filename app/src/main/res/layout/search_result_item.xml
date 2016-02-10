@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <ImageButton
+        android:id="@+id/ib_start"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="16dp"
+        android:contentDescription="start"
+        android:background="@drawable/iconfont_word_speaker"/>
+    <TextView
+        android:id="@+id/tv_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/ib_start"
+        android:text="65KB"
+        android:layout_centerVertical="true"/>
+    <TextView
+        android:id="@+id/tv_provider"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_centerInParent="true"/>
+
+    <ImageButton
+        android:id="@+id/ib_like"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginRight="16dp"
+        android:contentDescription="like"
+        android:background="@drawable/iconfont_thumb2"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"/>
+    <TextView
+        android:id="@+id/tv_like"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="4dp"
+        android:textColor="@color/colorPrimary"
+        android:layout_toLeftOf="@id/ib_like"
+        android:layout_centerVertical="true"
+        android:text="0"/>
+
+
+</RelativeLayout>

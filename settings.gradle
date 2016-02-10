@@ -1,0 +1,1 @@
+include ':app', ':cheesesquare', ':MaterialDesignDemo', ':MaterialDesign', ':MaterialEditText-mastersample', ':library', ':regularpractice'

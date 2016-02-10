@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/FangYan.iml" filepath="$PROJECT_DIR$/FangYan.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MaterialDesign/MaterialDesign.iml" filepath="$PROJECT_DIR$/MaterialDesign/MaterialDesign.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MaterialDesignDemo/MaterialDesignDemo.iml" filepath="$PROJECT_DIR$/MaterialDesignDemo/MaterialDesignDemo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MaterialEditText-mastersample/MaterialEditText-mastersample.iml" filepath="$PROJECT_DIR$/MaterialEditText-mastersample/MaterialEditText-mastersample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cheesesquare/cheesesquare.iml" filepath="$PROJECT_DIR$/cheesesquare/cheesesquare.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/regularpractice/regularpractice.iml" filepath="$PROJECT_DIR$/regularpractice/regularpractice.iml" />
+    </modules>
+  </component>
+</project>

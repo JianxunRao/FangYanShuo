@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">方言说</string>
+    <string name="search_hint">搜索方言字词</string>
+    <string name="about">\t\t\t方言说，是一款帮助你了解中国方言文化的工具。\n\t\t\t软件的开发由“方言说”团队完成，版权归“方言说”团队所有，任何人
+    或团体不得将其用于商业用途。\n\t\t\t本软件所有内容，部分来自用户上传，其他则搜集自互联网，仅作学习、交流之用。对于因软件包含的错误给用户造成的损失，我团队概不负责。
+    \n\t\t\t“方言说”是一个开源项目，如果你有什么建议或意见，请到项目主页(https://github.com/JianxunRao/FangYanShuo)提出，以便我们更好地优化本软件。\n\t\t\t本说明协议的最终解释权归“方言说”团队所有。
+        \n\t\t\t了解更多信息请点击“了解更多”。</string>
+    <string name="more_info">Copyright 2016 Trojx \nLicensed under the Apache License, Version 2.0 (the "License");you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at\n\n\t\t\thttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+    \n\n软件使用的开源项目：\n1.MaterialDesign:\nhttps://github.com/navasmdc/MaterialDesignLibrary
+    \n2.MaterialEditText:\nhttps://github.com/rengwuxian/MaterialEditText</string>
+</resources>
