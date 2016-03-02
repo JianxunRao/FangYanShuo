@@ -10,10 +10,15 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,6 +30,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.avos.avoscloud.AVException;
@@ -96,7 +102,7 @@ public class WordActivity extends AppCompatActivity {
     private ListView lv_word_wuu;
     private ListView lv_word_hsn;
     private List<String> langList;
-    private int currentLang;
+    private int currentLang=0;
     private ArrayList<String> historyList=new ArrayList<>();//搜索历史
     private ArrayList<String> relativeWordList=new ArrayList<>();//相似结果
     private ArrayList<String> autoCompleteWord=new ArrayList<>();//以上两者合并
@@ -118,6 +124,10 @@ public class WordActivity extends AppCompatActivity {
     private ArrayList<CardView> cardViews=new ArrayList<>();//所有CardView
     public static final int REQUEST_NEW_WORD=1;
     private MediaPlayer player;
+    private RecyclerView rv_word_relative;//显示相关词条
+    private MyAdapter myAdapter;
+    private RelativeLayout rl_word_relative;
+    private ArrayList<String> wordsRelative;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,6 +140,9 @@ public class WordActivity extends AppCompatActivity {
 
         Intent intent=getIntent();
         String key=intent.getStringExtra("word");
+        int lang=intent.getIntExtra("lang",0);//从wordlistActivity中传来
+        currentLang=lang;
+        spinner.setText(langs[lang]);
         tv_search.setText(key);
         search(key);
 
@@ -156,6 +169,9 @@ public class WordActivity extends AppCompatActivity {
         tv_word = (TextView) findViewById(R.id.tv_word);
         ib_fav = (ImageButton) findViewById(R.id.ib_fav);
         tv_search_count = (TextView) findViewById(R.id.tv_search_count);
+
+        rl_word_relative = (RelativeLayout) findViewById(R.id.rl_more_words);
+        rv_word_relative = (RecyclerView) findViewById(R.id.rv_word_relative);
 
         cv_word_yue = (CardView) findViewById(R.id.cv_word_yue);
         cardViews.add(cv_word_yue);
@@ -273,11 +289,12 @@ public class WordActivity extends AppCompatActivity {
         ib_fav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(WordActivity.this,NewWordActivity.class);
-                intent.putExtra("word",tv_search.getText().toString());
+                Intent intent = new Intent(WordActivity.this, NewWordActivity.class);
+                intent.putExtra("word", tv_search.getText().toString());
                 startActivityForResult(intent, REQUEST_NEW_WORD);
             }
         });
+
         ib_fav.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -295,15 +312,56 @@ public class WordActivity extends AppCompatActivity {
                 return false;
             }
         });
+
         tv_search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String item=relativeWordList.get(position);
+                String item = relativeWordList.get(position);
                 search(item);
             }
         });
 
+        rv_word_relative.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.HORIZONTAL));
+        rv_word_relative.setItemAnimator(new DefaultItemAnimator());
+        myAdapter = new MyAdapter();
+        rv_word_relative.setAdapter(myAdapter);
 
+    }
+    class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
+
+        @Override
+        public MyAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            MyViewHolder viewHolder=new MyViewHolder(LayoutInflater.from(WordActivity.this)
+            .inflate(R.layout.word_relative_item,parent,false));
+            return viewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(MyAdapter.MyViewHolder holder, final int position) {
+            holder.textView.setText(wordsRelative.get(position));
+            holder.textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(wordsRelative.get(position)!=null){
+                        search(wordsRelative.get(position));
+                    }
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+//            Log.e("auto words",wordsRelative.size()+"");
+            return Math.min(wordsRelative.size(),4);//最多显示四个相关词条
+        }
+        class MyViewHolder extends RecyclerView.ViewHolder{
+            TextView textView;
+
+            public MyViewHolder(View itemView) {
+                super(itemView);
+                textView= (TextView) itemView.findViewById(R.id.tv_word_relative_item);
+            }
+        }
     }
     private void setupSpinner(){
 //        langList = new ArrayList<>();
@@ -399,7 +457,20 @@ public class WordActivity extends AppCompatActivity {
             cardView.setVisibility(View.GONE);
         }
 
+//        rl_word_relative.setVisibility(View.VISIBLE);
+//        myAdapter.notifyDataSetChanged();
+
+
+        if(key.length()>6){//当超过n个字则缩小字号
+            tv_word.setTextSize(TypedValue.COMPLEX_UNIT_DIP,30);//调小字号防止越界
+        }else {
+            tv_word.setTextSize(TypedValue.COMPLEX_UNIT_DIP,45);//调回原来大小
+        }
         tv_word.setText(key);
+
+        tv_search.setText(key);
+
+        getRelativeWords();
 
         AVQuery<AVObject> query=new AVQuery<>("word");
         query.whereEqualTo("name", key);
@@ -409,7 +480,11 @@ public class WordActivity extends AppCompatActivity {
             @Override
             public void done(List<AVObject> list, AVException e) {
                 if (e == null) {
-                    tv_search_count.setText("搜索到 " + list.size() + " 个方言发音");
+                    if(list.size()==0){
+                        tv_search_count.setText("尚未收录该词条发音，您可以为该词条添加发音");
+                    }else {
+                        tv_search_count.setText("搜索到 " + list.size() + " 个方言发音");
+                    }
                     for (AVObject item : list) {
                         switch (item.getString("lang")) {
                             case "1":
@@ -460,6 +535,40 @@ public class WordActivity extends AppCompatActivity {
                     }
                 } else {
                     Log.e("find word error", e.toString());
+                }
+            }
+        });
+    }
+
+    /**
+     * search（）时获取当前词条的相关词条显示在底部
+     */
+    private void getRelativeWords(){
+        wordsRelative = new ArrayList<>();
+        AVQuery<AVObject> query=new AVQuery<>("word");
+        String s=tv_search.getText().toString();
+        int len=s.length();
+        int index= (int) (Math.random()*len);
+        query.whereContains("name", String.valueOf(s.charAt(index)));
+        query.setLimit(20);
+        if(currentLang!=0){//如果语言为全部，则不做限制
+            query.whereEqualTo("lang",currentLang+"");
+        }
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                if(e==null){
+                    if(list.size()>0){
+                        for(AVObject item:list){
+                            if(!wordsRelative.contains(item.getString("name"))){
+                                wordsRelative.add(item.getString("name"));
+                            }
+                        }
+                        rl_word_relative.setVisibility(View.VISIBLE);
+                        myAdapter.notifyDataSetChanged();
+                    }else {
+                        rl_word_relative.setVisibility(View.INVISIBLE);
+                    }
                 }
             }
         });
@@ -517,10 +626,10 @@ public class WordActivity extends AppCompatActivity {
                     }
                     getAutoCompleteWord();
 
-                    Log.e("result length", list.size() + "");//5
-                    Log.e("relative length",relativeWordList.size()+"");//5
-                    Log.e("auto length",autoCompleteWord.size()+"");//5
-                    Log.e("auto list",autoCompleteWord.toString());
+//                    Log.e("result length", list.size() + "");//5
+//                    Log.e("relative length",relativeWordList.size()+"");//5
+//                    Log.e("auto length",autoCompleteWord.size()+"");//5
+//                    Log.e("auto list",autoCompleteWord.toString());
                 }
                 else {
                     Log.e("get relative word error",e.toString());
@@ -653,7 +762,10 @@ public class WordActivity extends AppCompatActivity {
             if(list.size()!=0) {
                 if (list.get(position).getInt("like") > 0)
                     tv_like.setText(list.get(position).getInt("like") + "");
-                tv_size.setText(list.get(position).getAVFile("voiceFile").getSize() / 1024 + "KB");
+                AVFile avFile=list.get(position).getAVFile("voiceFile");
+                if(avFile!=null){
+                    tv_size.setText(avFile.getSize() / 1024 + "KB");
+                }
 //                list.get(position).fetchInBackground(new GetCallback<AVObject>() {
 //                    @Override
 //                    public void done(AVObject avObject, AVException e) {
@@ -684,7 +796,7 @@ public class WordActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     //开始播放
                     play(list.get(position));
-                    Log.e("start play", "");
+//                    Log.e("start play", "");
                 }
             });
             ib_like.setOnClickListener(new View.OnClickListener() {

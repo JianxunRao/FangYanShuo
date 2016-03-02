@@ -7,8 +7,7 @@
         android:id="@+id/iv_story_comment_user"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:layout_margin="8dp"
-        android:background="@color/tan"/>
+        android:layout_margin="8dp" />
     <TextView
         android:id="@+id/tv_story_comment_user"
         android:layout_width="wrap_content"

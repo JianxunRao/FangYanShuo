@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.trojx.regularpractice.toucheventtest.FirstLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ff0000">
+    <com.trojx.regularpractice.toucheventtest.SecondLayout
+        android:id="@+id/second"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:background="#00ff00"
+        android:layout_gravity="center">
+        <com.trojx.regularpractice.toucheventtest.ThirdTextView
+            android:id="@+id/third"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="#0000ff"
+            android:text="实习生"
+            android:textColor="#ffffff"
+            android:textSize="30sp" />
+    </com.trojx.regularpractice.toucheventtest.SecondLayout>
+</com.trojx.regularpractice.toucheventtest.FirstLayout>

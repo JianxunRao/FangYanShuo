@@ -1,5 +1,6 @@
 package com.trojx.fangyan.fragment;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -233,6 +234,7 @@ public class MeFragment extends Fragment {
         if(user!=null){
             AVQuery<AVObject> query_word=new AVQuery<>("word");
             query_word.whereEqualTo("provider", user);
+            query_word.include("provider");//防止转到详情界面时用户空指针
             query_word.findInBackground(new FindCallback<AVObject>() {
                 @Override
                 public void done(List<AVObject> list, AVException e) {
@@ -241,7 +243,7 @@ public class MeFragment extends Fragment {
                             words.add(item);
                         }
                         adapterWord.notifyDataSetChanged();
-                        adjustListViewHeight(lv_word,adapterWord,words);
+                        adjustListViewHeight(lv_word, adapterWord, words);
                     } else {
                         Log.e("get my words error", e.toString());
                     }
@@ -250,6 +252,7 @@ public class MeFragment extends Fragment {
 
             AVQuery<AVObject> query_story=new AVQuery<>("story");
             query_story.whereEqualTo("provider",user);
+            query_story.include("provider");//防止转到详情界面时用户空指针
             query_story.findInBackground(new FindCallback<AVObject>() {
                 @Override
                 public void done(List<AVObject> list, AVException e) {
@@ -306,6 +309,7 @@ public class MeFragment extends Fragment {
                         final Dialog dialog = new Dialog(getActivity(), "删除", "确认删除这个词条吗？");
                         dialog.show();
                         dialog.getButtonAccept().setText("是的");
+                        dialog.getButtonAccept().setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                         dialog.setOnAcceptButtonClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -404,11 +408,11 @@ public class MeFragment extends Fragment {
                 public void done(AVObject avObject, AVException e) {
                     if(e==null){
                         AVFile file=avObject.getAVFile("logo");
-                        if(file!=null){
+                        if(file!=null&&civ_user!=null){
                             Glide.with(getActivity()).load(file.getThumbnailUrl(true,500,500)).crossFade().into(civ_user);//改用缩略图
                         }
                        AVFile file1=avObject.getAVFile("blurBack");
-                        if(file1!=null){
+                        if(file1!=null&&iv_back_blur!=null){
                             Glide.with(getActivity()).load(file1.getUrl()).crossFade().into(iv_back_blur);
                         }
 
@@ -468,11 +472,11 @@ public class MeFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
             case REQUEST_LOGIN:
-                if(resultCode==getActivity().RESULT_OK)
+                if(resultCode== Activity.RESULT_OK)
                     refresh();
                 break;
             case REQUEST_NEW_LOGO:
-                if(resultCode==getActivity().RESULT_OK){
+                if(resultCode==Activity.RESULT_OK){
                     if(data!=null&&data.getData()!=null){
                         Uri uri=data.getData();
                         Log.e("data",data.getData().toString());
@@ -480,6 +484,8 @@ public class MeFragment extends Fragment {
                         try {
                             InputStream in=cr.openInputStream(uri);
                             final File file=new File(getActivity().getFilesDir().getAbsolutePath()+uri.hashCode());
+                            if(in==null)
+                                break;
                             BufferedInputStream bis=new BufferedInputStream(in);
                             FileOutputStream fos=new FileOutputStream(file);
                             byte[] buff=new byte[1024];

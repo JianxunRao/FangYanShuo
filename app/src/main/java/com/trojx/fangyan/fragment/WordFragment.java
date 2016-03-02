@@ -1,6 +1,7 @@
 package com.trojx.fangyan.fragment;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,9 +25,11 @@ import com.avos.avoscloud.CountCallback;
 import com.avos.avoscloud.FindCallback;
 import com.trojx.fangyan.R;
 import com.trojx.fangyan.activity.WordActivity;
+import com.trojx.fangyan.activity.WordListActivity;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -37,9 +40,10 @@ public class WordFragment extends Fragment {
     private int[] langCount;
     private ArrayList<AVObject> newWords;
     private LangCountAdapter langCountAdapter;
-    private static String[] langName={"粤    语","赣    语","客家语","晋    语","汉    语","闽东语","闽南语","吴    语","湘    语"};
+    private static String[] langName={"粤语","赣语","客家","晋语","汉语","闽东","闽南","吴语","湘语"};
     private NewWordAdapter newWordAdapter;
     private SwipeRefreshLayout refreshLayout;
+    private Typeface typeface;//
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,6 +52,7 @@ public class WordFragment extends Fragment {
         for(int lang=1;lang<10;lang++){
             getLangCount(lang);
         }
+        typeface = Typeface.createFromAsset(getActivity().getAssets(), "hwxk.ttf");
         getNewWords();
     }
 
@@ -89,6 +94,17 @@ public class WordFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        gv_lang_count.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int lang=position+1;
+                Intent intent=new Intent(getActivity(), WordListActivity.class);
+                intent.putExtra("lang",lang);
+                startActivity(intent);
+            }
+        });
+
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -127,14 +143,18 @@ public class WordFragment extends Fragment {
     private void getNewWords(){
         newWords = new ArrayList<>();
         AVQuery<AVObject> query=new AVQuery<>("word");
-        query.setLimit(12);
+        query.setLimit(21);
         query.orderByDescending("updatedAt");
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
                 if (e == null) {
+                    HashSet<String> set=new HashSet<>();//去重
                     for (AVObject item : list) {
-                        newWords.add(item);
+                        if(!set.contains(item.getString("name"))){
+                            newWords.add(item);
+                            set.add(item.getString("name"));
+                        }
                     }
                     newWordAdapter.notifyDataSetChanged();
                     refreshLayout.setRefreshing(false);
@@ -168,6 +188,7 @@ public class WordFragment extends Fragment {
             TextView tv_count= (TextView) v.findViewById(R.id.item_lang_count);
             tv_name.setText(langName[position]);
             tv_count.setText(langCount[position] + "");
+            tv_name.setTypeface(typeface);
             return v;
         }
     }
@@ -175,7 +196,7 @@ public class WordFragment extends Fragment {
 
         @Override
         public int getCount() {
-            return 12;
+            return 9;
         }
 
         @Override

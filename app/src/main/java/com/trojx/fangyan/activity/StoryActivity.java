@@ -125,25 +125,37 @@ public class StoryActivity extends AppCompatActivity {
 
         final AVUser avUser=story.getAVUser("provider");
 
-        avUser.fetchInBackground("logo", new GetCallback<AVObject>() {
-            @Override
-            public void done(AVObject avObject, AVException e) {
-                if(avUser.getUsername().length()>6){
-                    tv_user_name.setText(avUser.getUsername().substring(0,avUser.getUsername().length()/2));
-                }else {
-                    tv_user_name.setText(avUser.getUsername());
-                }
-                AVFile logoFile = avUser.getAVFile("logo");
-                if(!StoryActivity.this.isDestroyed()){
-//                    Glide.with(StoryActivity.this).load(logoFile.getUrl()).crossFade().into(civ_user_logo); //You cannot start a load for a destroyed activity
-                    if(logoFile!=null){
-                        Glide.with(StoryActivity.this).load(logoFile.getUrl()).crossFade().into(civ_user_logo);
-                    }else {
-                        Glide.with(StoryActivity.this).load(R.drawable.logo).crossFade().into(civ_user_logo);
-                    }
-                }
-            }
-        });
+//        avUser.fetchInBackground("logo", new GetCallback<AVObject>() {
+//            @Override
+//            public void done(AVObject avObject, AVException e) {
+//                if(avUser.getUsername().length()>6){
+//                    tv_user_name.setText(avUser.getUsername().substring(0,avUser.getUsername().length()/2));
+//                }else {
+//                    tv_user_name.setText(avUser.getUsername());
+//                }
+//                AVFile logoFile = avUser.getAVFile("logo");
+//                if(!StoryActivity.this.isDestroyed()){
+////                    Glide.with(StoryActivity.this).load(logoFile.getUrl()).crossFade().into(civ_user_logo); //You cannot start a load for a destroyed activity
+//                    if(logoFile!=null){
+//                        Glide.with(StoryActivity.this).load(logoFile.getUrl()).crossFade().into(civ_user_logo);
+//                    }else {
+//                        Glide.with(StoryActivity.this).load(R.drawable.logo).crossFade().into(civ_user_logo);
+//                    }
+//                }
+//            }
+//        });
+        AVFile logoFile=avUser.getAVFile("logo");
+        if (logoFile!=null){
+            Glide.with(this).load(logoFile.getUrl()).crossFade().into(civ_user_logo);
+        }else {
+            Glide.with(this).load(R.drawable.logo).crossFade().into(civ_user_logo);
+        }
+        String userName=avUser.getUsername();
+        if(userName.length()>6){
+            tv_user_name.setText(userName.substring(0, userName.length() / 2));
+        }else {
+            tv_user_name.setText(userName);
+        }
 
         int timelong=story.getInt("timelong");
         if(timelong<60000){

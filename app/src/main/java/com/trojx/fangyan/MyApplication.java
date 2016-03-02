@@ -7,6 +7,7 @@ import com.avos.avoscloud.AVInstallation;
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.PushService;
 import com.avos.avoscloud.SaveCallback;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.trojx.fangyan.activity.UpdateActivity;
 
 /**
@@ -17,6 +18,8 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
 //        AVOSCloud.useAVCloudUS();//
+        CrashReport.initCrashReport(getApplicationContext(), "900020615", false);
+//        CrashReport.testJavaCrash();
         AVOSCloud.initialize(this, "6vNrCi5ou4rw5sb0fx8b0J4w-gzGzoHsz", "zfuBYXx8X235VVi6O7acOM8G");
         AVInstallation.getCurrentInstallation().saveInBackground(new SaveCallback() {
             public void done(AVException e) {

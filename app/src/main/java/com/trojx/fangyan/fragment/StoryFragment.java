@@ -237,6 +237,8 @@ public class StoryFragment extends Fragment {
             AVFile logoFile=avUser.getAVFile("logo");
             if(logoFile!=null){
                 Glide.with(getActivity()).load(logoFile.getUrl()).crossFade().into(viewHolder.civ_user_logo);
+            }else {
+                Glide.with(getActivity()).load(R.drawable.logo).crossFade().into(viewHolder.civ_user_logo);
             }
             String userName=avUser.getUsername();
             if(userName.length()>6){
