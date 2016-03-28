@@ -3,6 +3,7 @@ package com.trojx.fangyan.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -22,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
@@ -228,30 +230,37 @@ public class NewWordActivity extends AppCompatActivity {
      * 开始录音
      */
     private  void startRecord(){
-        mRecorder = new MediaRecorder();
-        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mRecorder.setOutputFile(Environment.getExternalStorageDirectory().getAbsolutePath() + "/newRecord.3gp");
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        try {
-            mRecorder.prepare();
-        }catch (Exception e){
-            Log.e("mRecorder prepare error",e.toString());
-        }
-        mRecorder.start();
-        timer = new Timer();
-        task = new TimerTask() {
-            @Override
-            public void run() {
-                Message message=new Message();
-                message.what=REFRESH_TIME;
-                handler.sendMessage(message);
+        PackageManager pm=getPackageManager();
+        boolean recordPermission=pm.checkPermission("android.permission.RECORD_AUDIO","com.trojx.fangyan")
+                ==PackageManager.PERMISSION_GRANTED;
+        if(!recordPermission){
+            Toast.makeText(this,"没有录音权限",Toast.LENGTH_SHORT).show();
+        }else {
+            mRecorder = new MediaRecorder();
+            mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+            mRecorder.setOutputFile(Environment.getExternalStorageDirectory().getAbsolutePath() + "/newRecord.3gp");
+            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+            try {
+                mRecorder.prepare();
+            }catch (Exception e){
+                Log.e("mRecorder prepare error",e.toString());
             }
-        };
-        timer.schedule(task, 0, 1000);
+            mRecorder.start();
+            timer = new Timer();
+            task = new TimerTask() {
+                @Override
+                public void run() {
+                    Message message=new Message();
+                    message.what=REFRESH_TIME;
+                    handler.sendMessage(message);
+                }
+            };
+            timer.schedule(task, 0, 1000);
 
-        tv_time.setVisibility(View.VISIBLE);
-        tv_hint.setText("正在录音，点击按钮停止");
+            tv_time.setVisibility(View.VISIBLE);
+            tv_hint.setText("正在录音，点击按钮停止");
+        }
     }
 
     /**

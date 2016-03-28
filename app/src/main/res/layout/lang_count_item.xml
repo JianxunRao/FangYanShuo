@@ -9,6 +9,7 @@
         android:text="赣"
         android:textColor="@color/colorFallback"
         android:layout_margin="16dp"
+        android:layout_gravity="center_horizontal"
         android:textSize="35sp"/>
     <TextView
         android:id="@+id/item_lang_count"

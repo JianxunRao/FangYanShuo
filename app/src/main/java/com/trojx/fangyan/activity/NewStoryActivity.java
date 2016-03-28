@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
@@ -128,21 +129,21 @@ public class NewStoryActivity extends AppCompatActivity {
         bt_main.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (currentState){
+                switch (currentState) {
                     case STATUS_IDLE:
-                        currentState=STATUS_RECORDING;
+                        currentState = STATUS_RECORDING;
                         startRecord();
                         break;
                     case STATUS_RECORDING:
-                        currentState=STATUS_RECORDED;
+                        currentState = STATUS_RECORDED;
                         stopRecord();
                         break;
                     case STATUS_RECORDED:
-                        currentState=STATUS_PLAYING;
+                        currentState = STATUS_PLAYING;
                         startPlay();
                         break;
                     case STATUS_PLAYING:
-                        currentState=STATUS_RECORDED;
+                        currentState = STATUS_RECORDED;
                         stopPlay();
                 }
             }
@@ -209,34 +210,39 @@ public class NewStoryActivity extends AppCompatActivity {
      */
     private void startRecord(){
 
-        currentTimeLong=0;
+        PackageManager pm=getPackageManager();
+        boolean recordPermission=pm.checkPermission("android.permission.RECORD_AUDIO","com.trojx.fangyan")
+                ==PackageManager.PERMISSION_GRANTED;
+        if(!recordPermission){
+            Toast.makeText(this, "没有录音权限", Toast.LENGTH_SHORT).show();
+        }else {
+            currentTimeLong=0;
 
-        mRecorder = new MediaRecorder();
-        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mRecorder.setOutputFile(Environment.getExternalStorageDirectory().getAbsolutePath() + "/newStoryRecord.3gp");
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        try {
-            mRecorder.prepare();
-        }catch (Exception e){
-            Log.e("mRecorder prepare error",e.toString());
-        }
-        mRecorder.start();
-        timer = new Timer();
-        task = new TimerTask() {
-            @Override
-            public void run() {
-                Message message=new Message();
-                message.what=REFRESH_TIME;
-                handler.sendMessage(message);
+            mRecorder = new MediaRecorder();
+            mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+            mRecorder.setOutputFile(Environment.getExternalStorageDirectory().getAbsolutePath() + "/newStoryRecord.3gp");
+            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+            try {
+                mRecorder.prepare();
+            }catch (Exception e){
+                Log.e("mRecorder prepare error",e.toString());
             }
-        };
-        timer.schedule(task, 0, 1000);
+            mRecorder.start();
+            timer = new Timer();
+            task = new TimerTask() {
+                @Override
+                public void run() {
+                    Message message=new Message();
+                    message.what=REFRESH_TIME;
+                    handler.sendMessage(message);
+                }
+            };
+            timer.schedule(task, 0, 1000);
 
-        tv_time.setVisibility(View.VISIBLE);
-        tv_hint.setText("正在录音，点击按钮停止");
-
-
+            tv_time.setVisibility(View.VISIBLE);
+            tv_hint.setText("正在录音，点击按钮停止");
+        }
     }
 
     /**

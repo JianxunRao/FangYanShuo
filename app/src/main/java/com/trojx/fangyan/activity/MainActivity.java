@@ -15,6 +15,7 @@ import android.widget.ImageButton;
 import com.avos.avoscloud.AVUser;
 import com.gc.materialdesign.widgets.Dialog;
 import com.trojx.fangyan.R;
+import com.trojx.fangyan.fragment.JxhFragment;
 import com.trojx.fangyan.fragment.MeFragment;
 import com.trojx.fangyan.fragment.StoryFragment;
 import com.trojx.fangyan.fragment.WordFragment;
@@ -23,14 +24,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
+/**主界面
  * Created by Administrator on 2016/1/18.
  */
 public class MainActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
     private Date lastClickBack;
-    private static final String[] tabTitles={"词典","故事","我的"};
+    private static final String[] tabTitles={"词典","故事","家乡话","我的"};
     private MyAdapter adapter;
     private TabLayout tabLayout;
     private ImageButton ib_main_action;
@@ -70,8 +71,10 @@ public class MainActivity extends AppCompatActivity {
                         tab.setIcon(getResources().getDrawable(R.drawable.iconfont_story_normal));
                         break;
                     case 2:
-                        tab.setIcon(getResources().getDrawable(R.drawable.iconfont_me_normal));
+                        tab.setIcon(getResources().getDrawable(R.drawable.iconfont_media_normal));
                         break;
+                    case 3:
+                        tab.setIcon(getResources().getDrawable(R.drawable.iconfont_me_normal));
                     default:
                         break;
                 }
@@ -90,6 +93,9 @@ public class MainActivity extends AppCompatActivity {
                       tab.setIcon(R.drawable.iconfont_story_selected);
                       break;
                   case 2:
+                      tab.setIcon(R.drawable.iconfont_media_selected);
+                      break;
+                  case 3:
                       tab.setIcon(R.drawable.iconfont_me_selected);
                       break;
                   default:
@@ -107,6 +113,9 @@ public class MainActivity extends AppCompatActivity {
                       tab.setIcon(R.drawable.iconfont_story_normal);
                       break;
                   case 2:
+                      tab.setIcon(R.drawable.iconfont_media_normal);
+                      break;
+                  case 3:
                       tab.setIcon(R.drawable.iconfont_me_normal);
                       break;
                   default:
@@ -148,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
                             dialog.show();
                             break;
                         }
-                    case 2:
+                    case 3:
                         Intent intent2 = new Intent(MainActivity.this, SettingActivity.class);
                         startActivityForResult(intent2,MeFragment.REQUEST_LOGIN);
                         break;
@@ -167,14 +176,20 @@ public class MainActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 switch (position){
                     case 0:
+                        ib_main_action.setVisibility(View.VISIBLE);
                         ib_main_action.setImageResource(R.drawable.ic_add_white_48dp);
                         break;
                     case 1:
+                        ib_main_action.setVisibility(View.VISIBLE);
                         ib_main_action.setImageResource(R.drawable.ic_add_white_48dp);
                         break;
                     case 2:
-                        ib_main_action.setImageResource(R.drawable.ic_settings_white_48dp);
+                        ib_main_action.setVisibility(View.INVISIBLE);
                         break;
+                    case 3:
+                        ib_main_action.setVisibility(View.VISIBLE);
+                        ib_main_action.setImageResource(R.drawable.ic_settings_white_48dp);
+                    break;
                     default:
                         break;
                 }
@@ -182,7 +197,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
     }
@@ -191,10 +205,11 @@ public class MainActivity extends AppCompatActivity {
         adapter.addFragment(new WordFragment(), tabTitles[0]);
         adapter.addFragment(new StoryFragment(), tabTitles[1]);
 //        adapter.addFragment(new DiscoverFragment(),"发现");
-        adapter.addFragment(new MeFragment(), tabTitles[2]);
+        adapter.addFragment(new JxhFragment(),tabTitles[2]);
+        adapter.addFragment(new MeFragment(), tabTitles[3]);
         viewPager.setAdapter(adapter);
     }
-     class MyAdapter extends FragmentPagerAdapter {
+    class MyAdapter extends FragmentPagerAdapter {
         private List<Fragment> fragments=new ArrayList<>();
         private List<String> fragmentsTitles=new ArrayList<>();
 
@@ -206,6 +221,7 @@ public class MainActivity extends AppCompatActivity {
             fragments.add(fragment);
             fragmentsTitles.add(title);
         }
+
         @Override
         public Fragment getItem(int position) {
             return fragments.get(position);
@@ -260,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
                 storyFragment.storyList.clear();
                 storyFragment.getStory();
             }
-            MeFragment meFragment= (MeFragment) getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.view_pager + ":2");
+            MeFragment meFragment= (MeFragment) getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.view_pager + ":3");
             if(meFragment!=null){
                 meFragment.refresh();
             }

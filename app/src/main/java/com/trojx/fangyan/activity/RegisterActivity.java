@@ -10,6 +10,7 @@ import android.widget.EditText;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.SignUpCallback;
+import com.gc.materialdesign.views.ButtonFlat;
 import com.gc.materialdesign.views.ButtonRectangle;
 import com.gc.materialdesign.widgets.Dialog;
 import com.trojx.fangyan.R;
@@ -23,6 +24,8 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText et_password;
     private ButtonRectangle bt_register;
     private Toolbar toolbar;
+    private ButtonFlat bt_request_code;
+    private EditText et_sms_code;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +53,11 @@ public class RegisterActivity extends AppCompatActivity {
     private void register(){
         String account=et_account.getText().toString();
         String password=et_password.getText().toString();
+
         AVUser avUser=new AVUser();
         avUser.setUsername(account);
         avUser.setPassword(password);
+
 
         avUser.signUpInBackground(new SignUpCallback() {
             @Override

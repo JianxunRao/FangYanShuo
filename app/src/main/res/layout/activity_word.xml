@@ -34,6 +34,7 @@
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/spinner_lang"
                 android:layout_marginLeft="16dp"
+                android:layout_marginRight="55dp"
                 android:completionThreshold="1"
                 android:hint="@string/search_hint"
                 android:singleLine="true"

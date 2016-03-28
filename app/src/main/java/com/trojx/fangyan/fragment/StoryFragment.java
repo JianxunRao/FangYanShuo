@@ -347,9 +347,15 @@ public class StoryFragment extends Fragment {
         if(currentState==STATUS_IDLE){
             currentState=STATUS_PLAYING;
         }else {
-            if(player!=null&&player.isPlaying())
-                player.stop();
-            player.release();
+            try{
+                if(player!=null&&player.isPlaying())
+                    player.stop();
+            }catch (IllegalStateException e){
+                Log.e("player error",e.toString());
+            }
+            if(player!=null){
+                player.release();
+            }
         }
         AVFile avFile=item.getAVFile("voiceFile");
         avFile.getDataInBackground(new GetDataCallback() {
@@ -372,12 +378,21 @@ public class StoryFragment extends Fragment {
                             }
                         });
                     } catch (IOException e1) {
-                        Log.e("open story file error", e.toString());
+                        Log.e("open story file error", "");
                     }
                 } else {
                     Log.e("get storyFile error", e.toString());
                 }
             }
         });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(player!=null){
+            player.stop();
+            player.release();
+        }
     }
 }

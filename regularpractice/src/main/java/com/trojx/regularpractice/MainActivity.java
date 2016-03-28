@@ -146,5 +146,6 @@ public class MainActivity extends AppCompatActivity {
 //        webView.loadDataWithBaseURL("zhagame", html, "text/html", "utf-8", null);
 //        webView.getSettings().setJavaScriptEnabled(true);
 //        webView.setWebChromeClient(new WebChromeClient());
+
     }
 }

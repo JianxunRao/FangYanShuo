@@ -144,7 +144,7 @@ public class StoryActivity extends AppCompatActivity {
 //                }
 //            }
 //        });
-        AVFile logoFile=avUser.getAVFile("logo");
+        final AVFile logoFile=avUser.getAVFile("logo");
         if (logoFile!=null){
             Glide.with(this).load(logoFile.getUrl()).crossFade().into(civ_user_logo);
         }else {
@@ -240,23 +240,33 @@ public class StoryActivity extends AppCompatActivity {
         bt_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String content=et_comment.getText().toString();
+                final String content=et_comment.getText().toString();
                 if(content.isEmpty()){
                     Toast.makeText(StoryActivity.this,"评论不能为空！",Toast.LENGTH_SHORT).show();
                 }else {
                     AVObject comment=new AVObject("storycomment");
-                    if(AVUser.getCurrentUser()!=null)
+                    if(AVUser.getCurrentUser()!=null){
                         comment.put("user",AVUser.getCurrentUser());
-                    comment.put("story",story);
-                    comment.put("content",content);
-                    comment.saveInBackground(new SaveCallback() {
-                        @Override
-                        public void done(AVException e) {
-                            et_comment.setText("");
-                            getComments();
-
-                        }
-                    });
+                        comment.put("story",story);
+                        comment.put("content",content);
+                        comment.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(AVException e) {
+                                if (e == null) {
+                                    et_comment.setText("");
+                                    getComments();
+                                    story.increment("commentcount");
+                                    story.saveInBackground();
+                                    int count = Integer.parseInt(tv_story_comment_count.getText().toString()) + 1;
+                                    tv_story_comment_count.setText(count + "");
+                                } else {
+                                    Log.e("save comment", e.toString());
+                                }
+                            }
+                        });
+                    }else {
+                        Toast.makeText(StoryActivity.this,"评论需要注册或登录！",Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -363,7 +373,13 @@ public class StoryActivity extends AppCompatActivity {
                     @Override
                     public void done(AVObject avObject, AVException e) {
                         AVFile avFile = avUser.getAVFile("logo");
-                        Glide.with(StoryActivity.this).load(avFile.getUrl()).crossFade().into(viewHolder.iv_user);
+                        if(avFile!=null){
+                            if(!StoryActivity.this.isDestroyed())
+                                Glide.with(StoryActivity.this).load(avFile.getUrl()).crossFade().into(viewHolder.iv_user);
+                        }else {
+                            if(!StoryActivity.this.isDestroyed())
+                                Glide.with(StoryActivity.this).load(R.drawable.logo).crossFade().into(viewHolder.iv_user);
+                        }
                         viewHolder.tv_user.setText(avUser.getUsername());
                     }
                 });

@@ -448,8 +448,11 @@ public class WordActivity extends AppCompatActivity {
      */
     private void  search(String key){
 
+        tv_search.clearFocus();//解决每次搜索后下拉框总是显示的问题
+
 //        if(key.equals(""))
 //            return;
+
         for(ArrayList list:wordsList){
             list.clear();
         }
@@ -469,6 +472,7 @@ public class WordActivity extends AppCompatActivity {
         tv_word.setText(key);
 
         tv_search.setText(key);
+        tv_search.setSelection(key.length());
 
         getRelativeWords();
 
@@ -657,22 +661,24 @@ public class WordActivity extends AppCompatActivity {
 //            return;
 //        }
         AVFile avFile=item.getAVFile("voiceFile");
-        avFile.getDataInBackground(new GetDataCallback() {
-            @Override
-            public void done(byte[] bytes, AVException e) {
-                if(e==null){
-                    try {
-                        FileOutputStream fos=openFileOutput("play.mp3", MODE_PRIVATE);
-                        fos.write(bytes);
-                        fos.close();
-                        player = MediaPlayer.create(WordActivity.this, Uri.parse(getFilesDir().getAbsolutePath() + "/play.mp3"));
-                        player.start();
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
+        if(avFile!=null){
+            avFile.getDataInBackground(new GetDataCallback() {
+                @Override
+                public void done(byte[] bytes, AVException e) {
+                    if(e==null){
+                        try {
+                            FileOutputStream fos=openFileOutput("play.mp3", MODE_PRIVATE);
+                            fos.write(bytes);
+                            fos.close();
+                            player = MediaPlayer.create(WordActivity.this, Uri.parse(getFilesDir().getAbsolutePath() + "/play.mp3"));
+                            player.start();
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     }
 
     class MySpinnerAdapter extends BaseAdapter{
