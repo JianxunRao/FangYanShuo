@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
@@ -72,8 +73,8 @@ public class StoryFragment extends Fragment {
         lv_story.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (player != null && player.isPlaying()) {
-                    player.stop();
+                if (player != null) {
+//                    player.stop();
                     player.release();
                     currentState = STATUS_IDLE;
                 }
@@ -367,16 +368,30 @@ public class StoryFragment extends Fragment {
                         fos.write(bytes);
                         fos.flush();
                         fos.close();
+                        try{
+                            if(player!=null&&player.isPlaying())
+                                player.stop();
+                        }catch (IllegalStateException e0){
+                            Log.e("player error",e0.toString());
+                        }
+                        if(player!=null){
+                            player.release();
+                        }
                         player = MediaPlayer.create(getActivity(), Uri.parse(getActivity().getFilesDir().getAbsolutePath() + "/story.3gp"));
-                        player.start();
-                        player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                            @Override
-                            public void onCompletion(MediaPlayer mp) {
-                                mp.release();
-                                currentState = STATUS_IDLE;
-                                ad.stop();
-                            }
-                        });
+                        if (player!=null){
+                            player.start();
+                            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                                @Override
+                                public void onCompletion(MediaPlayer mp) {
+                                    mp.stop();
+                                    mp.release();
+                                    currentState = STATUS_IDLE;
+                                    ad.stop();
+                                }
+                            });
+                        }else {
+                            Toast.makeText(getActivity(), "播放失败", Toast.LENGTH_SHORT).show();
+                        }
                     } catch (IOException e1) {
                         Log.e("open story file error", "");
                     }

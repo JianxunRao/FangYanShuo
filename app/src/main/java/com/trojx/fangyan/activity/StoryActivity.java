@@ -275,8 +275,10 @@ public class StoryActivity extends AppCompatActivity {
         if(currentState==STATUS_IDLE){
             currentState=STATUS_PLAYING;
         }else {
-            player.stop();
-            player.release();
+            if (player!=null&&player.isPlaying()){
+                player.stop();
+                player.release();
+            }
         }
         AVFile avFile=item.getAVFile("voiceFile");
         avFile.getDataInBackground(new GetDataCallback() {
@@ -289,15 +291,18 @@ public class StoryActivity extends AppCompatActivity {
                         fos.flush();
                         fos.close();
                         player = MediaPlayer.create(StoryActivity.this, Uri.parse(getFilesDir().getAbsolutePath() + "/story.3gp"));
-                        player.start();
-                        player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                            @Override
-                            public void onCompletion(MediaPlayer mp) {
-                                mp.release();
-                                currentState = STATUS_IDLE;
-                                ad.stop();
-                            }
-                        });
+                        if (player!=null){
+                            player.start();
+                            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                                @Override
+                                public void onCompletion(MediaPlayer mp) {
+                                    mp.stop();
+                                    mp.release();
+                                    currentState = STATUS_IDLE;
+                                    ad.stop();
+                                }
+                            });
+                        }
                     }catch (IOException e1){
                         Log.e("open story file error", e.toString());
                     }
@@ -402,11 +407,12 @@ public class StoryActivity extends AppCompatActivity {
         }
     }
 
+
     @Override
-    public void finish() {
-        super.finish();
-        if(player!=null){
-//            player.stop();
+    protected void onDestroy() {
+        super.onDestroy();
+        if(player!=null&&player.isPlaying()){
+            player.stop();
             player.release();
         }
     }
