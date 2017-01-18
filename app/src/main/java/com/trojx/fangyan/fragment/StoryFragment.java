@@ -242,11 +242,7 @@ public class StoryFragment extends Fragment {
                 Glide.with(getActivity()).load(R.drawable.logo).crossFade().into(viewHolder.civ_user_logo);
             }
             String userName=avUser.getUsername();
-            if(userName.length()>6){
-                viewHolder.tv_user_name.setText(userName.substring(0,userName.length()/2));
-            }else {
-                viewHolder.tv_user_name.setText(userName);
-            }
+            viewHolder.tv_user_name.setText(userName);
             int timelong=item.getInt("timelong");
             if(timelong<60000){
                 viewHolder.tv_story_time_long.setText(timelong/1000+ "秒");
