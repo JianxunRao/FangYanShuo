@@ -1,5 +1,5 @@
 language: android
-sudo: false
+sudo: required
 git:
   depth: 1
 jdk:
@@ -7,7 +7,7 @@ jdk:
 android:
   components:
   - tools
-  - build-tools-23.0.2
+  - build-tools-23.0.3
   - android-23
   - extra-android-m2repository
   - extra-android-support
