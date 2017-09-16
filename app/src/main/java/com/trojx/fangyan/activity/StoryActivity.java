@@ -163,7 +163,11 @@ public class StoryActivity extends AppCompatActivity {
         }else {
             tv_story_time_long.setText(timelong/60000+"分钟");
         }
-        tv_story_location.setText(story.getString("location"));
+        if (story.has("location")){
+            tv_story_location.setText(story.getString("location"));
+        }else {
+            tv_story_location.setText("来自 世界的某个角落");
+        }
         tv_story_like_count.setText(story.getInt("like") + "");
         tv_story_comment_count.setText(story.getInt("commentcount") + "");
         tv_story_content.setText(story.getString("content"));
@@ -297,7 +301,7 @@ public class StoryActivity extends AppCompatActivity {
                                 @Override
                                 public void onCompletion(MediaPlayer mp) {
                                     mp.stop();
-                                    mp.release();
+                                    mp.reset();
                                     currentState = STATUS_IDLE;
                                     ad.stop();
                                 }
@@ -411,9 +415,12 @@ public class StoryActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(player!=null&&player.isPlaying()){
-            player.stop();
-            player.release();
+        if(player!=null){
+            if (player.isPlaying()){
+                player.stop();
+            }else {
+                player.release();
+            }
         }
     }
 

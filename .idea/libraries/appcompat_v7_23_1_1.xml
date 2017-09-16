@@ -1,15 +1,15 @@
 <component name="libraryTable">
   <library name="appcompat-v7-23.1.1">
     <ANNOTATIONS>
-      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/annotations.zip!/" />
       <root url="jar://$PROJECT_DIR$/MaterialEditText-mastersample/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/annotations.zip!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/annotations.zip!/" />
+      <root url="jar://$PROJECT_DIR$/cheesesquare/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/annotations.zip!/" />
       <root url="jar://$PROJECT_DIR$/library/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/annotations.zip!/" />
       <root url="jar://$PROJECT_DIR$/regularpractice/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/annotations.zip!/" />
-      <root url="jar://$PROJECT_DIR$/cheesesquare/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/annotations.zip!/" />
     </ANNOTATIONS>
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/res" />
-      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.android/build-cache/2f947d1a00f712221bbed5d7995eb524af02d4e6/output/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.android/build-cache/2f947d1a00f712221bbed5d7995eb524af02d4e6/output/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

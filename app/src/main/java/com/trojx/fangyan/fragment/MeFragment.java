@@ -409,11 +409,11 @@ public class MeFragment extends Fragment {
                     if(e==null){
                         AVFile file=avObject.getAVFile("logo");
                         if(file!=null&&civ_user!=null){
-                            Glide.with(getActivity()).load(file.getThumbnailUrl(true,500,500)).crossFade().into(civ_user);//改用缩略图
+                            Glide.with(getActivity()).load(file.getThumbnailUrl(true,120,120)).crossFade().into(civ_user);//改用缩略图
                         }
                        AVFile file1=avObject.getAVFile("blurBack");
                         if(file1!=null&&iv_back_blur!=null){
-                            Glide.with(getActivity()).load(file1.getUrl()).crossFade().into(iv_back_blur);
+                            Glide.with(getActivity()).load(file1.getThumbnailUrl(true,480,320)).crossFade().into(iv_back_blur);
                         }
 
                     }

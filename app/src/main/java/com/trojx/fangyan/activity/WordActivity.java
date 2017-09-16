@@ -32,6 +32,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
@@ -478,6 +479,7 @@ public class WordActivity extends AppCompatActivity {
 
         AVQuery<AVObject> query=new AVQuery<>("word");
         query.whereEqualTo("name", key);
+        query.addDescendingOrder("like");
         if(currentLang!=LANG_ALL)
             query.whereEqualTo("lang",currentLang+"");
         query.findInBackground(new FindCallback<AVObject>() {
@@ -670,8 +672,28 @@ public class WordActivity extends AppCompatActivity {
                             FileOutputStream fos=openFileOutput("play.mp3", MODE_PRIVATE);
                             fos.write(bytes);
                             fos.close();
+                            try{
+                                if(player!=null&&player.isPlaying())
+                                    player.stop();
+                            }catch (IllegalStateException e0){
+                                Log.e("player error",e0.toString());
+                            }
+                            if(player!=null){
+                                player.release();
+                            }
                             player = MediaPlayer.create(WordActivity.this, Uri.parse(getFilesDir().getAbsolutePath() + "/play.mp3"));
-                            player.start();
+                            if (player!=null){
+                                player.start();
+                                player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                                    @Override
+                                    public void onCompletion(MediaPlayer mp) {
+                                        mp.stop();
+                                        mp.reset();
+                                    }
+                                });
+                            }else {
+                                Toast.makeText(WordActivity.this, "播放失败", Toast.LENGTH_SHORT).show();
+                            }
                         } catch (IOException e1) {
                             e1.printStackTrace();
                         }

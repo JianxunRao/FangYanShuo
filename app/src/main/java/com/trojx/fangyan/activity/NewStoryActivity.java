@@ -35,6 +35,7 @@ import com.gc.materialdesign.views.ButtonFloatSmall;
 import com.gc.materialdesign.views.CheckBox;
 import com.gc.materialdesign.widgets.Dialog;
 import com.gc.materialdesign.widgets.ProgressDialog;
+import com.tbruyelle.rxpermissions.RxPermissions;
 import com.trojx.fangyan.R;
 
 import org.json.JSONObject;
@@ -68,17 +69,18 @@ public class NewStoryActivity extends AppCompatActivity {
     private MediaRecorder mRecorder;
     private Timer timer;
     private TimerTask task;
-    private static final int GET_LOCATION=-1;
-    private static final int REFRESH_TIME=0;
-    private static final int STATUS_IDLE=1;
-    private static final int STATUS_RECORDING=2;
-    private static final int STATUS_RECORDED=3;
-    private static final int STATUS_PLAYING=4;
+    private static final int GET_LOCATION = -1;
+    private static final int REFRESH_TIME = 0;
+    private static final int STATUS_IDLE = 1;
+    private static final int STATUS_RECORDING = 2;
+    private static final int STATUS_RECORDED = 3;
+    private static final int STATUS_PLAYING = 4;
     private Handler handler;
     private int currentTime;
     private MediaPlayer mPlayer;
     private int currentState;
-    private int currentTimeLong=0;//音频时长
+    private int currentTimeLong = 0;//音频时长
+    public static final String TAG="NewStoryActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,11 +89,11 @@ public class NewStoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_story);
 
         findViews();
-        currentTimeLong=0;
-        currentTime=0;
-        currentState=STATUS_IDLE;
+        currentTimeLong = 0;
+        currentTime = 0;
+        currentState = STATUS_IDLE;
         getLatLng();
-        getAddress();
+
 
 
 //        handler = new Handler(){ //leak???
@@ -108,7 +110,7 @@ public class NewStoryActivity extends AppCompatActivity {
 //                }
 //            }
 //        };
-        handler=new Handler(new Handler.Callback() {
+        handler = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg) {
                 switch (msg.what) {
@@ -117,9 +119,9 @@ public class NewStoryActivity extends AppCompatActivity {
                         tv_location.setText(location);
                         break;
                     case REFRESH_TIME:
-                        currentTime=currentTime+1;
-                        tv_time.setText(currentTime+"秒");
-                        currentTimeLong=currentTimeLong+1;
+                        currentTime = currentTime + 1;
+                        tv_time.setText(currentTime + "秒");
+                        currentTimeLong = currentTimeLong + 1;
                     default:
                         break;
                 }
@@ -208,15 +210,15 @@ public class NewStoryActivity extends AppCompatActivity {
     /**
      * 开始录音
      */
-    private void startRecord(){
+    private void startRecord() {
 
-        PackageManager pm=getPackageManager();
-        boolean recordPermission=pm.checkPermission("android.permission.RECORD_AUDIO","com.trojx.fangyan")
-                ==PackageManager.PERMISSION_GRANTED;
-        if(!recordPermission){
+        PackageManager pm = getPackageManager();
+        boolean recordPermission = pm.checkPermission("android.permission.RECORD_AUDIO", "com.trojx.fangyan")
+                == PackageManager.PERMISSION_GRANTED;
+        if (!recordPermission) {
             Toast.makeText(this, "没有录音权限", Toast.LENGTH_SHORT).show();
-        }else {
-            currentTimeLong=0;
+        } else {
+            currentTimeLong = 0;
 
             mRecorder = new MediaRecorder();
             mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -225,16 +227,16 @@ public class NewStoryActivity extends AppCompatActivity {
             mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
             try {
                 mRecorder.prepare();
-            }catch (Exception e){
-                Log.e("mRecorder prepare error",e.toString());
+            } catch (Exception e) {
+                Log.e("mRecorder prepare error", e.toString());
             }
             mRecorder.start();
             timer = new Timer();
             task = new TimerTask() {
                 @Override
                 public void run() {
-                    Message message=new Message();
-                    message.what=REFRESH_TIME;
+                    Message message = new Message();
+                    message.what = REFRESH_TIME;
                     handler.sendMessage(message);
                 }
             };
@@ -248,16 +250,16 @@ public class NewStoryActivity extends AppCompatActivity {
     /**
      * 停止录音
      */
-    private  void stopRecord(){
+    private void stopRecord() {
         bt_main.setDrawableIcon(getResources().getDrawable(R.drawable.iconfont_play));
         ib_delete.setVisibility(View.VISIBLE);
-        if(mRecorder!=null){
+        if (mRecorder != null) {
             mRecorder.stop();
             mRecorder.release();
-            mRecorder=null;
+            mRecorder = null;
         }
         timer.cancel();
-        timer=null;
+        timer = null;
         currentTime = 0;
 
         tv_hint.setText("录音完成，点击按钮试听录音");
@@ -266,7 +268,7 @@ public class NewStoryActivity extends AppCompatActivity {
     /**
      * 播放录音
      */
-    private void startPlay(){
+    private void startPlay() {
         bt_main.setDrawableIcon(getResources().getDrawable(R.drawable.iconfont_pause));
         mPlayer = MediaPlayer.create(this, Uri.parse(Environment.getExternalStorageDirectory().getAbsolutePath() + "/newStoryRecord.3gp"));
 //            mPlayer.prepare();
@@ -283,11 +285,11 @@ public class NewStoryActivity extends AppCompatActivity {
     /**
      * 停止播放录音
      */
-    private void stopPlay(){
+    private void stopPlay() {
         bt_main.setDrawableIcon(getResources().getDrawable(R.drawable.iconfont_play));
-        if(mPlayer!=null){
+        if (mPlayer != null) {
             mPlayer.release();
-            mPlayer=null;
+            mPlayer = null;
         }
     }
 
@@ -297,17 +299,19 @@ public class NewStoryActivity extends AppCompatActivity {
     private void getLatLng() {
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         String provider = locationManager.NETWORK_PROVIDER;
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        location = locationManager.getLastKnownLocation(provider);
+        RxPermissions rxPermissions = new RxPermissions(this);
+        rxPermissions.request(Manifest.permission.ACCESS_FINE_LOCATION).subscribe(grant -> {
+            if (grant) {
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    Log.e(TAG, "getLatLng: grant="+grant );
+                }
+                Log.i(TAG, "getLatLng: Providers"+locationManager.getAllProviders().toString());
+                location = locationManager.getLastKnownLocation(provider);
+                getAddress();
+            }else {
+                Log.e(TAG, "getLatLng: grant="+grant );
+            }
+        });
     }
 
     /**

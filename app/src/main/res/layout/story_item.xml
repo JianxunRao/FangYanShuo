@@ -72,7 +72,7 @@
             android:layout_marginLeft="8dp"
             android:text="内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容"
             android:textSize="18sp"
-            android:maxLines="2"/>
+            android:maxLines="10"/>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

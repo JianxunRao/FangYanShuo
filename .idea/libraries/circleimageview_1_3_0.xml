@@ -4,8 +4,8 @@
       <root url="jar://$PROJECT_DIR$/cheesesquare/build/intermediates/exploded-aar/de.hdodenhof/circleimageview/1.3.0/annotations.zip!/" />
     </ANNOTATIONS>
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/cheesesquare/build/intermediates/exploded-aar/de.hdodenhof/circleimageview/1.3.0/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/cheesesquare/build/intermediates/exploded-aar/de.hdodenhof/circleimageview/1.3.0/res" />
+      <root url="file://$USER_HOME$/.android/build-cache/33ea0b246dca2b6ecc5db791af79994d90ddaa0f/output/res" />
+      <root url="jar://$USER_HOME$/.android/build-cache/33ea0b246dca2b6ecc5db791af79994d90ddaa0f/output/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

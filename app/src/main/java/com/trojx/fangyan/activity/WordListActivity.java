@@ -1,5 +1,6 @@
 package com.trojx.fangyan.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -27,7 +28,6 @@ import com.avos.avoscloud.GetDataCallback;
 import com.gc.materialdesign.widgets.ProgressDialog;
 import com.trojx.fangyan.R;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,6 +38,7 @@ import java.util.List;
  */
 public class WordListActivity extends AppCompatActivity {
 
+    public static final String TAG="WordListActivity";
     private int currentLang;//当前语言
     private int currentSkip=0;//当前的skip
     private ArrayList<AVObject> wordList=new ArrayList<>();
@@ -225,16 +226,15 @@ public class WordListActivity extends AppCompatActivity {
      * @param bytes 音频文件的字节数组
      */
     private void play(byte[] bytes){
-        File file=new File("sdcard/word.fys");
         try {
-            FileOutputStream fos=new FileOutputStream(file);
-            fos.write(bytes, 0, bytes.length - 1);
+            FileOutputStream fos=openFileOutput("list_word.3gp", Context.MODE_PRIVATE);
+            fos.write(bytes);
             fos.close();
-            MediaPlayer mediaPlayer=MediaPlayer.create(this, Uri.parse("sdcard/word.fys"));
+            MediaPlayer mediaPlayer=MediaPlayer.create(this, Uri.parse(getFilesDir().getAbsolutePath() + "/list_word.3gp"));
 //            mediaPlayer.prepare();
             mediaPlayer.start();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, "play: ",e );
         }
 
     }

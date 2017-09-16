@@ -242,18 +242,18 @@ public class StoryFragment extends Fragment {
                 Glide.with(getActivity()).load(R.drawable.logo).crossFade().into(viewHolder.civ_user_logo);
             }
             String userName=avUser.getUsername();
-            if(userName.length()>6){
-                viewHolder.tv_user_name.setText(userName.substring(0,userName.length()/2));
-            }else {
-                viewHolder.tv_user_name.setText(userName);
-            }
+            viewHolder.tv_user_name.setText(userName);
             int timelong=item.getInt("timelong");
             if(timelong<60000){
                 viewHolder.tv_story_time_long.setText(timelong/1000+ "秒");
             }else {
                 viewHolder.tv_story_time_long.setText(timelong/60000+ "分钟");
             }
-            viewHolder.tv_story_location.setText(item.getString("location"));
+            if (item.has("location")){
+                viewHolder.tv_story_location.setText(item.getString("location"));
+            }else {
+                viewHolder.tv_story_location.setText("来自 世界的某个角落");
+            }
             viewHolder.tv_story_like_count.setText(item.getInt("like") + "");
             viewHolder.tv_story_comment_count.setText(item.getInt("commentcount") + "");
             viewHolder.tv_story_content.setText(item.getString("content"));
@@ -384,7 +384,7 @@ public class StoryFragment extends Fragment {
                                 @Override
                                 public void onCompletion(MediaPlayer mp) {
                                     mp.stop();
-                                    mp.release();
+                                    mp.reset();
                                     currentState = STATUS_IDLE;
                                     ad.stop();
                                 }
@@ -406,7 +406,9 @@ public class StoryFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         if(player!=null){
-            player.stop();
+            if (player.isPlaying()){
+                player.stop();
+            }
             player.release();
         }
     }

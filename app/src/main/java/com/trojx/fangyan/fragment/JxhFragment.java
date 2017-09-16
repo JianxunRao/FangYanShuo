@@ -102,7 +102,7 @@ public class JxhFragment extends Fragment{
 
 
             if (coverPic!=null){
-                Glide.with(JxhFragment.this).load(coverPic.getUrl()).crossFade().into(holder.iv);
+                Glide.with(JxhFragment.this).load(coverPic.getThumbnailUrl(true,320,480,70,"jpg")).crossFade().into(holder.iv);
             }
 
             if(item.getBoolean("isVoice")){
