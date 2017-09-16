@@ -1,0 +1,25 @@
+language: android
+sudo: required
+git:
+  depth: 1
+jdk:
+- oraclejdk8
+android:
+  components:
+  - tools
+  - build-tools-23.0.3
+  - android-23
+  - extra-android-m2repository
+  - extra-android-support
+script:
+- "./gradlew assembleRelease"
+before_install:
+- chmod +x gradlew
+deploy:
+  provider: releases
+  api_key:
+    secure: NSSEBmi9BehwX+GwpH+j18WoXN/CCa8W05568NTzfxiinShJB+hI8NN2+D6rWivxwph2MP0GtzaY7/ixe3KmglfaqjZ4D+PbrGqRH1XEGayfhV+NAnUyNC5lkXq/xPF5qqH+41RJJY8w0+MBdFJNp5v+Ub+AGtkCs4sm81apMsSx2KTYSuVkaM8tuBzaUWXqbDhdO19XB8klseKBznn+PoZy+Bzq9dTw4j/wM0LfhIi7QpBHHMf3EIu7DrgSOTIXR4XtlICCT58caqwpfVUxOKEe24tDPrQknMO0/T94YZWCVtn4U0okCI4Xu1VmYw16q+8FM66uE11e1Ap/4LlRYlQ/0Ug5w/kvs9r1pbYc/Wk6l3pbVZ5g3S/XDmp/unV/xuQM6hAFjcFbHFeTHYTQcevuXlWf0/17nXUUgUEnGe/BWsudwDsoIORuIyTjTF1Yl+q+mT1pQtva6srSdiBikL3n3b30p38bJu5LRHc+H8Xeax+jRYKNctkaDW29kreWSjrN23Ha+Xx1kcBNxfrYMqOxsjF83YyBjL8Np1QQPn0hNOMxW6YY6n/1o0EKU7nQ6QXeq7DeAT8WWcSaCQZLtEkn8PIKlDEg3O9Mk5VtFcIB4F3iR25+QnT582gjKbSR87b82RPkPhlqdlWyXFnKdxqGD70xwWK2lBA/r6wPkkE=
+  file: app/build/outputs/apk/app-release.apk
+  skip_cleanup: true
+  on:
+    repo: JianxunRao/FangYanShuo
